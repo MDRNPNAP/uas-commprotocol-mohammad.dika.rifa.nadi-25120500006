@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "orderId": "ORD-2026-001",
+    "customer": "CakraMart",
+    "amount": 450000,
+    "status": "paid",
+    "items": ["temperature-sensor", "router"],
+    "channel": "postman-lab"
+  },
+  {
+    "id": 2,
+    "orderId": "ORD-2026-002",
+    "customer": "Nusantara Data",
+    "amount": 875000,
+    "status": "processing",
+    "items": ["api-training-package"],
+    "channel": "uts-case"
+  }
+]

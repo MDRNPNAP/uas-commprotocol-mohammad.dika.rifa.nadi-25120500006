@@ -1,0 +1,275 @@
+{
+  "info": {
+    "name": "P10-P16 n8n UAS Communication Protocols Demo - REAL HTTP 429",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection untuk P10 sampai UAS: reliability, n8n, microservices, observability, MQTT, XML, Protobuf, dan final project evidence."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8088"
+    },
+    {
+      "key": "n8n_webhook_url",
+      "value": "http://localhost:5678/webhook/commproto-p10"
+    }
+  ],
+  "item": [
+    {
+      "name": "00 Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/health"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Health check 200', function(){ pm.response.to.have.status(200); });",
+              "pm.test('Response JSON', function(){ pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "P9 OpenAPI Spec + Test Script",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/openapi"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code 200', function(){ pm.response.to.have.status(200); });",
+              "pm.test('Response is JSON', function(){ pm.response.to.be.json; });",
+              "const jsonData = pm.response.json();",
+              "pm.test('Has openapi field', function(){ pm.expect(jsonData).to.have.property('openapi'); });",
+              "pm.test('Has info.title', function(){ pm.expect(jsonData.info).to.have.property('title'); });",
+              "pm.test('Has paths', function(){ pm.expect(jsonData).to.have.property('paths'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "P10 Reset Reliability State",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": "{{base_url}}/api/reliability/reset"
+      }
+    },
+    {
+      "name": "P10 Rate Limited API 200 or 429",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/reliability/rate-limited"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status must be 200 or 429', function(){ pm.expect([200,429]).to.include(pm.response.code); });",
+              "const jsonData = pm.response.json();",
+              "if (pm.response.code === 429) { pm.test('429 has retryAfterSeconds', function(){ pm.expect(jsonData).to.have.property('retryAfterSeconds'); }); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "P10 Load Balanced API",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/reliability/load-balanced"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code 200', function(){ pm.response.to.have.status(200); });",
+              "const jsonData = pm.response.json();",
+              "pm.test('Has backend field', function(){ pm.expect(jsonData).to.have.property('backend'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "P10 n8n Webhook Trigger",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientId\": \"kelompok-01\",\n  \"scenario\": \"rate-limit\",\n  \"timestamp\": \"2026-06-18T20:00:00+07:00\"\n}"
+        },
+        "url": "{{n8n_webhook_url}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"n8n response is JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Response has workflowResult\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"workflowResult\");",
+              "});",
+              "",
+              "pm.test(\"Response has workflowBranch\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"workflowBranch\");",
+              "});",
+              "",
+              "pm.test(\"Response has executedNode\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"executedNode\");",
+              "});",
+              "",
+              "pm.test(\"Response has backendStatusCode\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"backendStatusCode\");",
+              "});",
+              "",
+              "pm.test(\"Postman HTTP status mirrors backendStatusCode\", function () {",
+              "    pm.expect(pm.response.code).to.eql(jsonData.backendStatusCode);",
+              "});",
+              "",
+              "pm.test(\"HTTP status is 200 or 429 for this demo\", function () {",
+              "    pm.expect([200, 429]).to.include(pm.response.code);",
+              "});",
+              "",
+              "if (pm.response.code === 200) {",
+              "    pm.test(\"Workflow hit success branch\", function () {",
+              "        pm.expect(jsonData.workflowBranch).to.eql(\"TRUE_BRANCH_SUCCESS\");",
+              "        pm.expect(jsonData.executedNode).to.eql(\"Build Success Response\");",
+              "        pm.expect(jsonData.responseCodeSent).to.eql(200);",
+              "    });",
+              "}",
+              "",
+              "if (pm.response.code === 429) {",
+              "    pm.test(\"Workflow hit error branch and returns real HTTP 429\", function () {",
+              "        pm.expect(jsonData.workflowBranch).to.eql(\"FALSE_BRANCH_ERROR\");",
+              "        pm.expect(jsonData.executedNode).to.eql(\"Build Error Response\");",
+              "        pm.expect(jsonData.responseCodeSent).to.eql(429);",
+              "    });",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "P11 Microservices Order Flow",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"ORD-UAS-001\",\n  \"customer\": \"Team Alpha\",\n  \"amount\": 125000,\n  \"wireCapture\": true\n}"
+        },
+        "url": "{{base_url}}/api/microservices/orders"
+      }
+    },
+    {
+      "name": "P12 Observability Capture Scenario",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"scenario\": \"mqtt-telemetry-to-api-log\",\n  \"wireCapture\": true\n}"
+        },
+        "url": "{{base_url}}/api/observability/capture-scenario"
+      }
+    },
+    {
+      "name": "P14 XML Convert",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"to\": \"xml\"\n}"
+        },
+        "url": "{{base_url}}/api/encoding/convert"
+      }
+    },
+    {
+      "name": "P14 Protobuf Convert Real Library",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"to\": \"protobuf\",\n  \"records\": [\n    {\n      \"id\": 1,\n      \"sensor\": \"temperature\",\n      \"value\": 31.2,\n      \"unit\": \"celsius\"\n    }\n  ]\n}"
+        },
+        "url": "{{base_url}}/api/encoding/convert"
+      }
+    },
+    {
+      "name": "P16 UAS Capture Demo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"projectName\": \"Smart Campus Telemetry\",\n  \"useCase\": \"sensor alert workflow\",\n  \"protocols\": [\n    \"REST\",\n    \"MQTT\",\n    \"XML\",\n    \"Protobuf\",\n    \"n8n\"\n  ],\n  \"wireCapture\": true\n}"
+        },
+        "url": "{{base_url}}/api/project/capture-demo"
+      }
+    }
+  ]
+}

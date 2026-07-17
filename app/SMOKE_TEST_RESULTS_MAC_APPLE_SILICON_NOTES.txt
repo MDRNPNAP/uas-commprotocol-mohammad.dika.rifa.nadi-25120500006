@@ -1,0 +1,27 @@
+Smoke Test Notes - MacBook Apple Silicon M4 Pro Support
+
+Validated in sandbox:
+- app/server.py starts successfully with Python runtime available in sandbox.
+- GET /api/health returns 200 JSON.
+- GET /api/openapi returns 200 JSON with openapi/info/paths.
+- POST /api/reliability/reset returns 200 JSON.
+- GET /api/reliability/rate-limited returns sequence 200,200,200,429 after reset.
+- GET /api/reliability/load-balanced returns backend distribution response.
+
+Not executable in sandbox:
+- Docker Desktop for macOS and n8n container runtime cannot be launched from this sandbox environment.
+
+Mac Apple Silicon support added:
+- scripts/start_app_macos_apple_silicon.sh
+- scripts/run_n8n_macos_apple_silicon.sh
+- scripts/run_n8n_macos_compose.sh
+- scripts/smoke_test_macos_apple_silicon.sh
+- scripts/stop_n8n_macos.sh
+- scripts/reset_n8n_volume_macos_DANGER.sh
+- docker/docker-compose.n8n.macos-apple-silicon.yml
+- postman/CommProto_Local_Mac_Apple_Silicon.postman_environment.json
+- README_MACBOOK_APPLE_SILICON_M4_PRO.md
+
+Key networking rule:
+- Browser/Postman on Mac -> use localhost.
+- n8n inside Docker -> use host.docker.internal to call the demo app on Mac host.

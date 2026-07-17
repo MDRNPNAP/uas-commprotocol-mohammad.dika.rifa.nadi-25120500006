@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package demo.inference;
+
+service InferenceService {
+  rpc Predict (PredictionRequest) returns (PredictionReply) {}
+  rpc BatchPredict (BatchPredictionRequest) returns (BatchPredictionReply) {}
+  rpc HealthCheck (HealthCheckRequest) returns (HealthCheckReply) {}
+}
+
+message PredictionRequest {
+  string customer_id = 1;
+  FeatureVector features = 2;
+}
+
+message FeatureVector {
+  double avg_order_value = 1;
+  int32 monthly_orders = 2;
+}
+
+message PredictionReply {
+  string customer_id = 1;
+  double score = 2;
+  string label = 3;
+  string model_version = 4;
+}
+
+message BatchPredictionRequest {
+  repeated PredictionRequest items = 1;
+}
+
+message BatchPredictionReply {
+  repeated PredictionReply predictions = 1;
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckReply {
+  string status = 1;
+  string transport = 2;
+}

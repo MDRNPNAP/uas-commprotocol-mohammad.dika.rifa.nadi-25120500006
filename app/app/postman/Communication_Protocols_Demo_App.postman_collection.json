@@ -1,0 +1,680 @@
+{
+  "info": {
+    "name": "Communication Protocols Demo App - Advanced RPS Aligned",
+    "description": "Postman collection untuk demo Communication Protocols berbasis RPS. REST CRUD tetap ditempatkan sebagai P2 recap. P3 ke atas dibuat lebih interaktif: WebSocket event API, MQTT topic/filter/payload, gRPC-style call, encoding converter, troubleshooting, API documentation runner, reliability, microservices, observability, n8n automation, dan UAS project evidence.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8088"
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('response code is expected for lab scenario', function () {",
+          "  pm.expect(pm.response.code).to.be.oneOf([200, 201, 204, 400, 401, 404, 429, 500]);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Wireshark Capture Matrix",
+      "description": "Gunakan folder ini untuk melihat port, trigger endpoint, expected packet, dan filter Wireshark per pertemuan.",
+      "item": [
+        {
+          "name": "GET Capture Matrix",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/capture/matrix"
+          }
+        },
+        {
+          "name": "POST Run P3 WebSocket Capture",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"meeting\": \"P3\",\n  \"channel\": \"dashboard\",\n  \"payload\": {\n    \"event\": \"dashboard_refresh\",\n    \"value\": 1\n  }\n}"},
+            "url": "{{base_url}}/api/capture/run"
+          }
+        },
+        {
+          "name": "POST Run P16 Multi-Protocol Capture",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"meeting\": \"P16\",\n  \"event\": \"uas.demo.executed\"\n}"},
+            "url": "{{base_url}}/api/capture/run"
+          }
+        }
+      ]
+    },
+    {
+      "name": "P2 Recap - REST API CRUD",
+      "description": "P2 recap only. Digunakan sebagai pembanding sebelum P3+.",
+      "item": [
+        {
+          "name": "GET Products",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/products"
+          }
+        },
+        {
+          "name": "POST Create Product",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"name\": \"Smart Sensor\",\n  \"category\": \"iot\",\n  \"price\": 175000,\n  \"stock\": 12\n}"},
+            "url": "{{base_url}}/api/products"
+          }
+        },
+        {
+          "name": "PUT Replace Product 1",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"name\": \"Laptop Pro 14 Replacement\",\n  \"category\": \"computer\",\n  \"price\": 15500000,\n  \"stock\": 4\n}"},
+            "url": "{{base_url}}/api/products/1"
+          }
+        },
+        {
+          "name": "PATCH Product 1",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"stock\": 2,\n  \"price\": 14900000\n}"},
+            "url": "{{base_url}}/api/products/1"
+          }
+        },
+        {
+          "name": "DELETE Product 1",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/products/1"
+          }
+        },
+        {
+          "name": "Reset Demo Data",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/reset"
+          }
+        }
+      ]
+    },
+    {
+      "name": "UTS REST Case Resources - Users Profiles Orders Transactions",
+      "description": "Folder ini menjawab case UTS selain product. Semua resource mendukung GET, POST, PUT, PATCH, DELETE. Canonical paths: /api/users, /api/profiles, /api/orders, /api/transactions. Shortcut classroom: /api/user/profile dan /api/order/transaction.",
+      "item": [
+        {"name": "GET UTS Case List", "request": {"method": "GET", "url": "{{base_url}}/api/uts/cases"}},
+        {"name": "Reset Demo Data Before Method Test", "request": {"method": "POST", "url": "{{base_url}}/api/reset"}},
+        {"name": "GET Users", "request": {"method": "GET", "url": "{{base_url}}/api/users"}},
+        {
+          "name": "POST Create User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"username\": \"data.student\",\n  \"email\": \"data.student@example.edu\",\n  \"role\": \"student\",\n  \"status\": \"active\",\n  \"department\": \"Sains Data\"\n}"},
+            "url": "{{base_url}}/api/users"
+          }
+        },
+        {
+          "name": "PUT Replace User 1",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"username\": \"student.demo.updated\",\n  \"email\": \"student.demo.updated@example.edu\",\n  \"role\": \"student\",\n  \"status\": \"active\",\n  \"department\": \"Sains Data\"\n}"},
+            "url": "{{base_url}}/api/users/1"
+          }
+        },
+        {
+          "name": "PATCH User 1",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"status\": \"inactive\"\n}"},
+            "url": "{{base_url}}/api/users/1"
+          }
+        },
+        {"name": "DELETE User 2", "request": {"method": "DELETE", "url": "{{base_url}}/api/users/2"}},
+        {"name": "GET Profiles", "request": {"method": "GET", "url": "{{base_url}}/api/profiles"}},
+        {"name": "GET User Profile Shortcut", "request": {"method": "GET", "url": "{{base_url}}/api/user/profile"}},
+        {
+          "name": "POST Create Profile",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"userId\": 1,\n  \"fullName\": \"Student Demo\",\n  \"program\": \"Sains Data\",\n  \"semester\": 2,\n  \"skills\": [\"postman\", \"json\", \"wireshark\"],\n  \"city\": \"Jakarta\"\n}"},
+            "url": "{{base_url}}/api/profiles"
+          }
+        },
+        {
+          "name": "PUT Replace Profile 1",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"userId\": 1,\n  \"fullName\": \"Student Demo Updated\",\n  \"program\": \"Sains Data\",\n  \"semester\": 2,\n  \"skills\": [\"postman\", \"python\", \"api testing\"],\n  \"city\": \"Jakarta\"\n}"},
+            "url": "{{base_url}}/api/profiles/1"
+          }
+        },
+        {
+          "name": "PATCH Profile 1",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"skills\": [\"postman\", \"mqtt\", \"grpc\"]\n}"},
+            "url": "{{base_url}}/api/profiles/1"
+          }
+        },
+        {"name": "DELETE Profile 2", "request": {"method": "DELETE", "url": "{{base_url}}/api/profiles/2"}},
+        {"name": "GET Orders", "request": {"method": "GET", "url": "{{base_url}}/api/orders"}},
+        {
+          "name": "POST Create Order",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"orderId\": \"ORD-UTS-003\",\n  \"customer\": \"Student Mart\",\n  \"amount\": 325000,\n  \"status\": \"created\",\n  \"items\": [\"api-lab-kit\"],\n  \"channel\": \"postman\"\n}"},
+            "url": "{{base_url}}/api/orders"
+          }
+        },
+        {
+          "name": "PUT Replace Order 1",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"orderId\": \"ORD-2026-001\",\n  \"customer\": \"CakraMart Updated\",\n  \"amount\": 500000,\n  \"status\": \"paid\",\n  \"items\": [\"temperature-sensor\", \"router\"],\n  \"channel\": \"postman-lab\"\n}"},
+            "url": "{{base_url}}/api/orders/1"
+          }
+        },
+        {
+          "name": "PATCH Order 1",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"status\": \"shipped\"\n}"},
+            "url": "{{base_url}}/api/orders/1"
+          }
+        },
+        {"name": "DELETE Order 2", "request": {"method": "DELETE", "url": "{{base_url}}/api/orders/2"}},
+        {"name": "GET Transactions", "request": {"method": "GET", "url": "{{base_url}}/api/transactions"}},
+        {"name": "GET Order Transaction Shortcut", "request": {"method": "GET", "url": "{{base_url}}/api/order/transaction"}},
+        {
+          "name": "POST Create Transaction",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"transactionId\": \"TRX-UTS-003\",\n  \"orderId\": \"ORD-UTS-003\",\n  \"method\": \"virtual_account\",\n  \"amount\": 325000,\n  \"status\": \"pending\",\n  \"paidAt\": null,\n  \"channel\": \"payment-gateway\"\n}"},
+            "url": "{{base_url}}/api/transactions"
+          }
+        },
+        {
+          "name": "PUT Replace Transaction 1",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"transactionId\": \"TRX-2026-001\",\n  \"orderId\": \"ORD-2026-001\",\n  \"method\": \"bank_transfer\",\n  \"amount\": 450000,\n  \"status\": \"settled\",\n  \"paidAt\": \"2026-06-01T09:00:00+0700\",\n  \"channel\": \"payment-gateway\"\n}"},
+            "url": "{{base_url}}/api/transactions/1"
+          }
+        },
+        {
+          "name": "PATCH Transaction 1",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"status\": \"settled\"\n}"},
+            "url": "{{base_url}}/api/transactions/1"
+          }
+        },
+        {"name": "DELETE Transaction 2", "request": {"method": "DELETE", "url": "{{base_url}}/api/transactions/2"}},
+        {"name": "Reset Demo Data", "request": {"method": "POST", "url": "{{base_url}}/api/reset"}}
+      ]
+    },
+    {
+      "name": "P3 WebSocket and Real-Time Communication",
+      "description": "Postman dapat dipakai untuk HTTP event API dan trigger real WebSocket packet. WebSocket asli menggunakan HTTP Upgrade ke ws://localhost:8088/ws/echo?channel=dashboard. Wireshark: tcp.port == 8088, http.request.uri contains \"/ws/echo\", lalu websocket setelah 101 Switching Protocols.",
+      "item": [
+        {
+          "name": "GET WebSocket Capture Guide",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/websocket/real-status"
+          }
+        },
+        {
+          "name": "POST Real WebSocket Capture Trigger",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"channel\": \"dashboard\",\n  \"payload\": {\n    \"event\": \"dashboard_refresh\",\n    \"value\": 1,\n    \"source\": \"postman-websocket-capture\"\n  }\n}"},
+            "url": "{{base_url}}/api/websocket/real-send"
+          }
+        },
+        {
+          "name": "POST Realtime Dashboard Event",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"channel\": \"dashboard\",\n  \"event\": \"dashboard_refresh\",\n  \"transport\": \"http-post-event\",\n  \"payload\": {\n    \"dashboard\": \"sales-ops\",\n    \"changedMetric\": \"orders_per_minute\",\n    \"value\": 12\n  }\n}"},
+            "url": "{{base_url}}/api/realtime/events"
+          }
+        },
+        {
+          "name": "POST Realtime Alert Event",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"channel\": \"alerts\",\n  \"event\": \"sensor_alert\",\n  \"transport\": \"http-post-event\",\n  \"payload\": {\n    \"deviceId\": \"sensor-02\",\n    \"temperature\": 39.4,\n    \"severity\": \"warning\"\n  }\n}"},
+            "url": "{{base_url}}/api/realtime/events"
+          }
+        },
+        {
+          "name": "GET Dashboard Events",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/realtime/events?channel=dashboard"
+          }
+        },
+        {
+          "name": "GET Alert Events",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/realtime/events?channel=alerts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "P4 MQTT and IoT Telemetry Simulator",
+      "description": "Simulator konsep publish/subscribe plus trigger real MQTT 3.1.1 packet capture. server.py menjalankan embedded MQTT broker pada 127.0.0.1:1883. Untuk session yang tidak disconnect, gunakan POST /api/mqtt/session/start lalu inspect PINGREQ/PINGRESP di Wireshark.",
+      "item": [
+        {
+          "name": "POST Publish Temperature Telemetry",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"clientId\": \"student-client-01\",\n  \"topic\": \"class/commproto/sensor-01/temperature\",\n  \"qos\": 1,\n  \"retained\": true,\n  \"payload\": {\n    \"deviceId\": \"sensor-01\",\n    \"temperature\": 27.5,\n    \"humidity\": 61\n  }\n}"},
+            "url": "{{base_url}}/api/mqtt/publish"
+          }
+        },
+        {
+          "name": "POST Publish Humidity Telemetry",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"clientId\": \"student-client-02\",\n  \"topic\": \"class/commproto/sensor-02/humidity\",\n  \"qos\": 0,\n  \"retained\": false,\n  \"payload\": {\n    \"deviceId\": \"sensor-02\",\n    \"humidity\": 72,\n    \"battery\": 88\n  }\n}"},
+            "url": "{{base_url}}/api/mqtt/publish"
+          }
+        },
+        {
+          "name": "GET Real MQTT Broker Status",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/mqtt/real-status"
+          }
+        },
+        {
+          "name": "POST Real MQTT Packet Publish",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"clientId\": \"student-client-01\",\n  \"topic\": \"class/commproto/sensor-01/temperature\",\n  \"filter\": \"class/commproto/+/temperature\",\n  \"qos\": 1,\n  \"retained\": true,\n  \"payload\": {\n    \"deviceId\": \"sensor-01\",\n    \"temperature\": 27.5,\n    \"humidity\": 61\n  }\n}"},
+            "url": "{{base_url}}/api/mqtt/real-publish"
+          }
+        },
+        {
+          "name": "POST Start Persistent MQTT Session",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"clientId\": \"student-client-01\",\n  \"topic\": \"class/commproto/sensor-01/temperature\",\n  \"filter\": \"class/commproto/+/temperature\",\n  \"qos\": 1,\n  \"retained\": true,\n  \"keepaliveIntervalSeconds\": 15,\n  \"payload\": {\n    \"deviceId\": \"sensor-01\",\n    \"temperature\": 27.5,\n    \"humidity\": 61\n  }\n}"},
+            "url": "{{base_url}}/api/mqtt/session/start"
+          }
+        },
+        {
+          "name": "GET Persistent MQTT Session Status",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/mqtt/session/status"
+          }
+        },
+        {
+          "name": "POST Stop Persistent MQTT Session",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"clientId\": \"student-client-01\"\n}"},
+            "url": "{{base_url}}/api/mqtt/session/stop"
+          }
+        },
+        {
+          "name": "GET Exact Topic Messages",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/mqtt/messages?topic=class/commproto/sensor-01/temperature"
+          }
+        },
+        {
+          "name": "GET Subscribe Filter class/commproto/+/temperature",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/mqtt/messages?filter=class/commproto/+/temperature"
+          }
+        },
+        {
+          "name": "GET Topics and Retained Messages",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/mqtt/topics"
+          }
+        },
+        {
+          "name": "Clear MQTT Simulator Messages",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/mqtt/clear"
+          }
+        }
+      ]
+    },
+    {
+      "name": "P5 gRPC and Protocol Buffers Concept",
+      "description": "Folder ini memakai endpoint concept mock berbasis HTTP/1.1 untuk membaca service contract, plus endpoint trigger /api/grpc/http2-call yang memanggil real gRPC HTTP/2 server terintegrasi di server.py pada port 50051. Tidak perlu edit .proto untuk demo standar; pilih method dan kirim sample payload. Capture Wireshark: tcp.port == 50051 lalu Decode As HTTP2 jika perlu.",
+      "item": [
+        {
+          "name": "GET Proto Contract",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/grpc/proto"
+          }
+        },
+        {
+          "name": "GET Service Methods",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/grpc/services"
+          }
+        },
+        {
+          "name": "POST Predict RPC Concept",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"method\": \"Predict\",\n  \"payload\": {\n    \"customerId\": \"C-1024\",\n    \"features\": {\n      \"avgOrderValue\": 250000,\n      \"monthlyOrders\": 7\n    }\n  }\n}"},
+            "url": "{{base_url}}/api/grpc/call"
+          }
+        },
+        {
+          "name": "POST BatchPredict RPC Concept",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"method\": \"BatchPredict\",\n  \"payload\": {\n    \"items\": [\n      {\"customerId\": \"C-1001\", \"features\": {\"avgOrderValue\": 150000, \"monthlyOrders\": 3}},\n      {\"customerId\": \"C-1002\", \"features\": {\"avgOrderValue\": 420000, \"monthlyOrders\": 9}}\n    ]\n  }\n}"},
+            "url": "{{base_url}}/api/grpc/call"
+          }
+        },
+        {
+          "name": "POST HealthCheck RPC Concept",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"method\": \"HealthCheck\",\n  \"payload\": {}\n}"},
+            "url": "{{base_url}}/api/grpc/call"
+          }
+        },
+        {
+          "name": "POST Real Predict gRPC HTTP2 Call",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"method\": \"Predict\",\n  \"payload\": {\n    \"customerId\": \"C-1024\",\n    \"features\": {\n      \"avgOrderValue\": 250000,\n      \"monthlyOrders\": 7\n    }\n  }\n}"},
+            "url": "{{base_url}}/api/grpc/http2-call"
+          }
+        },
+        {
+          "name": "POST Real BatchPredict gRPC HTTP2 Call",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"method\": \"BatchPredict\",\n  \"payload\": {\n    \"items\": [\n      {\"customerId\": \"C-1001\", \"features\": {\"avgOrderValue\": 150000, \"monthlyOrders\": 3}},\n      {\"customerId\": \"C-1002\", \"features\": {\"avgOrderValue\": 420000, \"monthlyOrders\": 9}}\n    ]\n  }\n}"},
+            "url": "{{base_url}}/api/grpc/http2-call"
+          }
+        },
+        {
+          "name": "POST Real HealthCheck gRPC HTTP2 Call",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"method\": \"HealthCheck\",\n  \"payload\": {}\n}"},
+            "url": "{{base_url}}/api/grpc/http2-call"
+          }
+        }
+      ]
+    },
+    {
+      "name": "P6 Data Encoding JSON XML CSV Protobuf",
+      "item": [
+        {"name": "GET JSON", "request": {"method": "GET", "url": "{{base_url}}/api/exchange/json"}},
+        {"name": "GET XML", "request": {"method": "GET", "url": "{{base_url}}/api/exchange/xml"}},
+        {"name": "GET CSV Data Science Context", "request": {"method": "GET", "url": "{{base_url}}/api/exchange/csv"}},
+        {"name": "GET Protobuf Schema", "request": {"method": "GET", "url": "{{base_url}}/api/exchange/protobuf-schema"}},
+        {
+          "name": "POST Convert Records to XML",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"to\": \"xml\",\n  \"records\": [\n    {\"id\": 1, \"sensor\": \"temperature\", \"value\": 27.5, \"unit\": \"celsius\"},\n    {\"id\": 2, \"sensor\": \"humidity\", \"value\": 61, \"unit\": \"percent\"}\n  ]\n}"},
+            "url": "{{base_url}}/api/encoding/convert"
+          }
+        },
+        {
+          "name": "POST Convert Records to Protobuf Demo",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"to\": \"protobuf\",\n  \"records\": [\n    {\"id\": 1, \"sensor\": \"temperature\", \"value\": 27.5, \"unit\": \"celsius\"}\n  ]\n}"},
+            "url": "{{base_url}}/api/encoding/convert"
+          }
+        }
+      ]
+    },
+    {
+      "name": "P7 TLS HTTP Troubleshooting and UTS Prep",
+      "item": [
+        {"name": "GET TLS Capture Guide", "request": {"method": "GET", "url": "{{base_url}}/api/tls/status"}},
+        {"name": "POST TLS Self-Test Capture Trigger", "request": {"method": "POST", "url": "{{base_url}}/api/tls/self-test"}},
+        {"name": "Health 200", "request": {"method": "GET", "url": "{{base_url}}/api/health"}},
+        {"name": "Status 400", "request": {"method": "GET", "url": "{{base_url}}/api/troubleshooting/status/400"}},
+        {"name": "Status 404", "request": {"method": "GET", "url": "{{base_url}}/api/troubleshooting/status/404"}},
+        {"name": "Slow API", "request": {"method": "GET", "url": "{{base_url}}/api/troubleshooting/slow?ms=1200"}},
+        {
+          "name": "POST Custom 429 Rate Limit Scenario",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"status\": 429,\n  \"delayMs\": 300,\n  \"scenario\": \"Client receives rate limit while testing API integration\"\n}"},
+            "url": "{{base_url}}/api/troubleshooting/test"
+          }
+        },
+        {
+          "name": "POST Custom 500 Failure Scenario",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"status\": 500,\n  \"delayMs\": 800,\n  \"scenario\": \"Backend service timeout or dependency failure\"\n}"},
+            "url": "{{base_url}}/api/troubleshooting/test"
+          }
+        }
+      ]
+    },
+    {
+      "name": "P8 UTS Evidence",
+      "item": [
+        {"name": "GET UTS Case List", "request": {"method": "GET", "url": "{{base_url}}/api/uts/cases"}},
+        {"name": "GET Users", "request": {"method": "GET", "url": "{{base_url}}/api/users"}},
+        {"name": "GET Profiles", "request": {"method": "GET", "url": "{{base_url}}/api/profiles"}},
+        {"name": "GET Orders", "request": {"method": "GET", "url": "{{base_url}}/api/uts/orders"}},
+        {"name": "GET Transactions", "request": {"method": "GET", "url": "{{base_url}}/api/transactions"}},
+        {
+          "name": "POST Webhook Inbox",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"source\": \"postman-demo\",\n  \"event\": \"order.created\",\n  \"orderId\": \"ORD-2026-001\",\n  \"amount\": 450000\n}"},
+            "url": "{{base_url}}/api/webhook/inbox"
+          }
+        },
+        {
+          "name": "POST UTS Evidence Submission",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"studentId\": \"NIM-DEMO\",\n  \"case\": \"UTS API + packet capture evidence\",\n  \"methods\": [\"GET\", \"POST\"],\n  \"evidence\": [\"postman-screenshot\", \"curl-command\", \"pcapng-optional\"]\n}"},
+            "url": "{{base_url}}/api/uts/evidence"
+          }
+        },
+        {"name": "GET Webhook Inbox", "request": {"method": "GET", "url": "{{base_url}}/api/webhook/inbox"}}
+      ]
+    },
+    {
+      "name": "P9 API Documentation and Newman",
+      "item": [
+        {"name": "GET OpenAPI-style Spec", "request": {"method": "GET", "url": "{{base_url}}/api/openapi"}},
+        {"name": "GET Newman Runner Guide", "request": {"method": "GET", "url": "{{base_url}}/api/postman-run-summary"}},
+        {
+          "name": "POST Simulate Postman Runner",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"folder\": \"P9 API Documentation and Newman\",\n  \"iterations\": 2\n}"},
+            "url": "{{base_url}}/api/postman/run"
+          }
+        }
+      ]
+    },
+    {
+      "name": "P10 Rate Limiting and Load Balancing",
+      "item": [
+        {"name": "Hit Rate-Limited API", "request": {"method": "GET", "url": "{{base_url}}/api/reliability/rate-limited"}},
+        {"name": "Hit Load-Balanced API", "request": {"method": "GET", "url": "{{base_url}}/api/reliability/load-balanced"}},
+        {
+          "name": "POST Simulate Load",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"requests\": 9\n}"},
+            "url": "{{base_url}}/api/reliability/simulate-load"
+          }
+        },
+        {"name": "Reset Reliability State", "request": {"method": "POST", "url": "{{base_url}}/api/reliability/reset"}}
+      ]
+    },
+    {
+      "name": "P11 Microservices Communication",
+      "item": [
+        {"name": "Protocol Decision Case", "request": {"method": "GET", "url": "{{base_url}}/api/cases/protocol-decision"}},
+        {"name": "GET Order Flow", "request": {"method": "GET", "url": "{{base_url}}/api/microservices/order-flow"}},
+        {
+          "name": "POST Simulate Successful Order Flow",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"orderId\": \"ORD-DEMO-001\",\n  \"amount\": 450000,\n  \"wireCapture\": true\n}"},
+            "url": "{{base_url}}/api/microservices/orders"
+          }
+        },
+        {
+          "name": "POST Simulate Payment Service Failure",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"orderId\": \"ORD-DEMO-002\",\n  \"amount\": 750000,\n  \"failAt\": \"payment-service\",\n  \"wireCapture\": true\n}"},
+            "url": "{{base_url}}/api/microservices/orders"
+          }
+        }
+      ]
+    },
+    {
+      "name": "P12 Observability",
+      "item": [
+        {"name": "GET Metrics", "request": {"method": "GET", "url": "{{base_url}}/api/observability/metrics"}},
+        {"name": "GET Logs", "request": {"method": "GET", "url": "{{base_url}}/api/observability/logs"}},
+        {"name": "GET Trace", "request": {"method": "GET", "url": "{{base_url}}/api/observability/trace/demo-trace-001"}},
+        {
+          "name": "POST Custom Log Event",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"event\": \"custom.observability.event\",\n  \"severity\": \"info\",\n  \"service\": \"demo-postman\",\n  \"message\": \"Mahasiswa membuat custom log dari Postman\",\n  \"traceId\": \"demo-trace-001\"\n}"},
+            "url": "{{base_url}}/api/observability/custom-log"
+          }
+        },
+        {
+          "name": "POST Observability Capture Scenario",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"scenario\": \"logs-metrics-trace-plus-mqtt\"\n}"},
+            "url": "{{base_url}}/api/observability/capture-scenario"
+          }
+        }
+      ]
+    },
+    {
+      "name": "P13-P15 n8n Automation and Project Phase",
+      "item": [
+        {"name": "GET n8n Workflow Spec", "request": {"method": "GET", "url": "{{base_url}}/api/automation/n8n-workflow-spec"}},
+        {
+          "name": "POST Automation Inbox",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"protocol\": \"MQTT+REST+n8n\",\n  \"event\": \"telemetry.workflow.completed\",\n  \"deviceId\": \"sensor-01\",\n  \"evidence\": \"n8n-workflow-run\"\n}"},
+            "url": "{{base_url}}/api/automation/inbox"
+          }
+        },
+        {
+          "name": "POST Simulate n8n Workflow Run",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"workflow\": \"telemetry-to-inbox\",\n  \"event\": \"telemetry.workflow.completed\",\n  \"triggerPayload\": {\n    \"deviceId\": \"sensor-01\",\n    \"temperature\": 31.2,\n    \"source\": \"mqtt-simulator\"\n  },\n  \"wireCapture\": true\n}"},
+            "url": "{{base_url}}/api/automation/workflow-run"
+          }
+        },
+        {"name": "GET Automation Inbox", "request": {"method": "GET", "url": "{{base_url}}/api/automation/inbox"}}
+      ]
+    },
+    {
+      "name": "P16 UAS Final Project",
+      "item": [
+        {"name": "GET Project Summary", "request": {"method": "GET", "url": "{{base_url}}/api/project/summary"}},
+        {
+          "name": "POST Project Event",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"protocol\": \"MQTT+WebSocket+n8n\",\n  \"event\": \"uas.demo.executed\",\n  \"evidence\": \"screenshot+postman+automation-log\",\n  \"wireCapture\": true\n}"},
+            "url": "{{base_url}}/api/project/events"
+          }
+        },
+        {
+          "name": "POST Multi-Protocol Capture Demo",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"event\": \"uas.demo.executed\",\n  \"wireCapture\": true\n}"},
+            "url": "{{base_url}}/api/project/capture-demo"
+          }
+        },
+        {"name": "GET Project Events", "request": {"method": "GET", "url": "{{base_url}}/api/project/events"}}
+      ]
+    }
+  ]
+}

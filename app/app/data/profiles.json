@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "fullName": "Student Demo",
+    "program": "Sains Data",
+    "semester": 2,
+    "skills": ["terminal", "basic python", "api testing"],
+    "city": "Jakarta"
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "fullName": "Ops Analyst",
+    "program": "Sains Data",
+    "semester": 2,
+    "skills": ["postman", "wireshark", "data ingestion"],
+    "city": "Bekasi"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "username": "student.demo",
+    "email": "student.demo@example.edu",
+    "role": "student",
+    "status": "active",
+    "department": "Sains Data"
+  },
+  {
+    "id": 2,
+    "username": "ops.analyst",
+    "email": "ops.analyst@example.edu",
+    "role": "analyst",
+    "status": "active",
+    "department": "Data Operations"
+  }
+]

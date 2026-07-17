@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Communication Protocols Demo App</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Communication Protocols Demo App</h1>
+      <p>Local teaching backend yang disesuaikan dengan RPS: P3 WebSocket, P4 MQTT, P5 gRPC/Protobuf, P6 data encoding, P7 TLS/troubleshooting, P8 UTS, lalu P9-16 API documentation, Newman, reliability, microservices, observability, n8n automation, project, dan UAS.</p>
+    </div>
+    <div class="status">
+      <span id="serverStatus">Checking...</span>
+      <code>localhost:8088</code>
+    </div>
+  </header>
+
+  <main class="layout">
+    <nav class="sidebar">
+      <button class="nav active" data-page="overview">Overview</button>
+      <button class="nav" data-page="rest">P2 REST Recap</button>
+      <button class="nav" data-page="websocket">P3 WebSocket</button>
+      <button class="nav" data-page="mqtt">P4 MQTT IoT</button>
+      <button class="nav" data-page="grpc">P5 gRPC Protobuf</button>
+      <button class="nav" data-page="exchange">P6 JSON/XML/Protobuf</button>
+      <button class="nav" data-page="troubleshooting">P7 TLS/Troubleshooting</button>
+      <button class="nav" data-page="uts">P8 UTS Evidence</button>
+      <button class="nav" data-page="api-docs">P9 API Docs/Newman</button>
+      <button class="nav" data-page="reliability">P10 Reliability</button>
+      <button class="nav" data-page="cases">P11 Microservices</button>
+      <button class="nav" data-page="observability">P12 Observability</button>
+      <button class="nav" data-page="automation">P13-15 n8n Project</button>
+      <button class="nav" data-page="project">P16 UAS</button>
+    </nav>
+
+    <section class="content">
+      <article class="page active" id="page-overview">
+        <h2>Overview</h2>
+        <div class="grid three">
+          <div class="card">
+            <h3>P3-P8 protocol foundation</h3>
+            <p>WebSocket, MQTT, gRPC/Protobuf, JSON/XML/Protobuf, TLS/troubleshooting, dan UTS evidence.</p>
+            <code>hands-on protocol</code>
+          </div>
+          <div class="card">
+            <h3>Post-UTS engineering practice</h3>
+            <p>Postman documentation, Newman-style runner, rate limit, load balancing, microservices, observability, dan n8n automation.</p>
+            <code>P9-P15</code>
+          </div>
+          <div class="card">
+            <h3>Evidence-based lab</h3>
+            <p>Setiap halaman punya expected output dan endpoint yang bisa dicapture di Postman/Wireshark.</p>
+            <code>screenshots + logs</code>
+          </div>
+        </div>
+        <h3>Suggested class flow</h3>
+        <ol class="steps">
+          <li>Jalankan server dan buka halaman ini.</li>
+          <li>Import Postman collection.</li>
+          <li>Demo per halaman sesuai mapping RPS.</li>
+          <li>Untuk REST CRUD, gunakan halaman P2 Recap hanya sebagai prasyarat/refresh.</li>
+          <li>Minta mahasiswa screenshot request, response, logs, metrics, dan workflow evidence.</li>
+        </ol>
+        <button class="methodCard" data-fetch="/api/capture/matrix">GET Wireshark Capture Matrix</button>
+        <pre id="overviewOutput">Klik capture matrix untuk melihat filter Wireshark per pertemuan.</pre>
+      </article>
+
+      <article class="page" id="page-rest">
+        <h2>Pertemuan 2 Recap: HTTP/HTTPS & REST API CRUD</h2>
+        <p class="note">Halaman ini disediakan sebagai prerequisite refresh. Berdasarkan RPS yang dikirim, RESTful API berada di Pertemuan 2, bukan Pertemuan 3-16.</p>
+        <div class="split">
+          <section class="panel">
+            <h3>Request Builder</h3>
+            <label>UTS Case Resource</label>
+            <select id="restResource">
+              <option value="products">products - inventory/product</option>
+              <option value="users">users - account/user</option>
+              <option value="profiles">profiles - user/profile</option>
+              <option value="orders">orders - order case</option>
+              <option value="transactions">transactions - order/transaction</option>
+            </select>
+            <label>Method</label>
+            <select id="restMethod">
+              <option>GET</option>
+              <option>POST</option>
+              <option>PUT</option>
+              <option>PATCH</option>
+              <option>DELETE</option>
+            </select>
+            <label>Path</label>
+            <input id="restPath" value="/api/products">
+            <label>JSON Body</label>
+            <textarea id="restBody">{
+  "name": "Smart Sensor",
+  "category": "iot",
+  "price": 175000,
+  "stock": 12
+}</textarea>
+            <div class="actions">
+              <button id="sendRest">Send REST Request</button>
+              <button class="secondary" id="resetProducts">Reset Demo Data</button>
+            </div>
+            <p class="note">Canonical paths: <code>/api/products</code>, <code>/api/users</code>, <code>/api/profiles</code>, <code>/api/orders</code>, <code>/api/transactions</code>. Shortcut classroom: <code>/api/user/profile</code> dan <code>/api/order/transaction</code>.</p>
+            <h3>Quick UTS Method Matrix</h3>
+            <div class="methodMatrix">
+              <span>users</span>
+              <button data-rest-resource="users" data-rest-method="GET">GET</button>
+              <button data-rest-resource="users" data-rest-method="POST">POST</button>
+              <button data-rest-resource="users" data-rest-method="PUT">PUT</button>
+              <button data-rest-resource="users" data-rest-method="PATCH">PATCH</button>
+              <button data-rest-resource="users" data-rest-method="DELETE">DELETE</button>
+              <span>profiles</span>
+              <button data-rest-resource="profiles" data-rest-method="GET">GET</button>
+              <button data-rest-resource="profiles" data-rest-method="POST">POST</button>
+              <button data-rest-resource="profiles" data-rest-method="PUT">PUT</button>
+              <button data-rest-resource="profiles" data-rest-method="PATCH">PATCH</button>
+              <button data-rest-resource="profiles" data-rest-method="DELETE">DELETE</button>
+              <span>orders</span>
+              <button data-rest-resource="orders" data-rest-method="GET">GET</button>
+              <button data-rest-resource="orders" data-rest-method="POST">POST</button>
+              <button data-rest-resource="orders" data-rest-method="PUT">PUT</button>
+              <button data-rest-resource="orders" data-rest-method="PATCH">PATCH</button>
+              <button data-rest-resource="orders" data-rest-method="DELETE">DELETE</button>
+              <span>transactions</span>
+              <button data-rest-resource="transactions" data-rest-method="GET">GET</button>
+              <button data-rest-resource="transactions" data-rest-method="POST">POST</button>
+              <button data-rest-resource="transactions" data-rest-method="PUT">PUT</button>
+              <button data-rest-resource="transactions" data-rest-method="PATCH">PATCH</button>
+              <button data-rest-resource="transactions" data-rest-method="DELETE">DELETE</button>
+            </div>
+          </section>
+          <section class="panel">
+            <h3>Response</h3>
+            <pre id="restResponse">Run request dari form kiri.</pre>
+            <h3>Current Resource Snapshot</h3>
+            <pre id="resourceSnapshot">Loading resource data...</pre>
+          </section>
+        </div>
+      </article>
+
+      <article class="page" id="page-exchange">
+        <h2>Pertemuan 6: Data Encoding - JSON, XML, Protobuf</h2>
+        <div class="grid four">
+          <button class="methodCard" data-fetch="/api/exchange/json">GET JSON</button>
+          <button class="methodCard" data-fetch="/api/exchange/xml">GET XML</button>
+          <button class="methodCard" data-fetch="/api/exchange/csv">GET CSV</button>
+          <button class="methodCard" data-fetch="/api/exchange/protobuf-schema">GET Protobuf Schema</button>
+        </div>
+        <div class="split">
+          <section class="panel">
+            <h3>Encoding Converter</h3>
+            <label>Target Format</label>
+            <select id="encodingTarget">
+              <option value="json">JSON</option>
+              <option value="xml">XML</option>
+              <option value="csv">CSV</option>
+              <option value="protobuf">Protobuf demo base64</option>
+            </select>
+            <label>Records JSON</label>
+            <textarea id="encodingRecords">[
+  {"id": 1, "sensor": "temperature", "value": 27.5, "unit": "celsius"},
+  {"id": 2, "sensor": "humidity", "value": 61, "unit": "percent"}
+]</textarea>
+            <button id="convertEncoding">POST Convert</button>
+          </section>
+          <section class="panel">
+            <h3>Conversion Output</h3>
+            <pre id="encodingOutput">Gunakan converter untuk membandingkan format dan ukuran payload.</pre>
+          </section>
+        </div>
+        <pre id="exchangeOutput">Pilih salah satu format.</pre>
+        <p class="note">Teaching point: JSON mudah dibaca, XML verbose dan terstruktur, Protobuf berbasis schema. CSV disediakan sebagai konteks data science tambahan.</p>
+      </article>
+
+      <article class="page" id="page-troubleshooting">
+        <h2>Pertemuan 7: TLS/HTTP Troubleshooting & UTS Prep</h2>
+        <div class="grid four">
+          <button class="methodCard" data-fetch="/api/health">Health 200</button>
+          <button class="methodCard" data-fetch="/api/troubleshooting/status/400">Error 400</button>
+          <button class="methodCard" data-fetch="/api/troubleshooting/status/404">Error 404</button>
+          <button class="methodCard" data-fetch="/api/troubleshooting/slow?ms=1200">Slow API</button>
+          <button class="methodCard" data-fetch="/api/tls/status">TLS Status</button>
+          <button id="runTlsSelfTest">POST TLS Self-Test</button>
+        </div>
+        <div class="split">
+          <section class="panel">
+            <h3>Custom Troubleshooting Scenario</h3>
+            <label>Status</label>
+            <select id="troubleStatus">
+              <option value="200">200 OK</option>
+              <option value="400">400 Bad Request</option>
+              <option value="401">401 Unauthorized</option>
+              <option value="404">404 Not Found</option>
+              <option value="429">429 Too Many Requests</option>
+              <option value="500">500 Internal Server Error</option>
+            </select>
+            <label>Delay ms</label>
+            <input id="troubleDelay" value="0">
+            <label>Scenario</label>
+            <input id="troubleScenario" value="API returns controlled error for analysis">
+            <button id="runTroubleTest">POST Troubleshooting Test</button>
+          </section>
+          <section class="panel">
+            <h3>Custom Test Output</h3>
+            <pre id="troubleCustomOutput">Run a custom troubleshooting test.</pre>
+          </section>
+        </div>
+        <pre id="troubleshootingOutput">Pilih endpoint untuk melihat status code dan behavior.</pre>
+        <p class="note">Untuk Wireshark: HTTP troubleshooting ada di port `8088`; TLS handshake ada di port `8443` lewat tombol `POST TLS Self-Test`.</p>
+      </article>
+
+      <article class="page" id="page-uts">
+        <h2>Pertemuan 8: UTS Evidence Case</h2>
+        <div class="split">
+          <section class="panel">
+            <h3>UTS REST API Cases</h3>
+            <button class="methodCard" data-fetch="/api/uts/cases">GET UTS Case List</button>
+            <button class="methodCard" data-fetch="/api/users">GET Users</button>
+            <button class="methodCard" data-fetch="/api/profiles">GET Profiles</button>
+            <button class="methodCard" data-fetch="/api/uts/orders">GET Orders</button>
+            <button class="methodCard" data-fetch="/api/transactions">GET Transactions</button>
+            <button class="methodCard" data-fetch="/api/webhook/inbox">GET Webhook Inbox</button>
+            <button id="sendWebhook">Send Webhook Test</button>
+            <button id="submitUtsEvidence">POST UTS Evidence</button>
+            <h3>Quick Method Test</h3>
+            <div class="methodMatrix compact">
+              <span>users</span>
+              <button data-rest-resource="users" data-rest-method="GET">GET</button>
+              <button data-rest-resource="users" data-rest-method="POST">POST</button>
+              <button data-rest-resource="users" data-rest-method="PUT">PUT</button>
+              <button data-rest-resource="users" data-rest-method="PATCH">PATCH</button>
+              <button data-rest-resource="users" data-rest-method="DELETE">DELETE</button>
+              <span>profiles</span>
+              <button data-rest-resource="profiles" data-rest-method="GET">GET</button>
+              <button data-rest-resource="profiles" data-rest-method="POST">POST</button>
+              <button data-rest-resource="profiles" data-rest-method="PUT">PUT</button>
+              <button data-rest-resource="profiles" data-rest-method="PATCH">PATCH</button>
+              <button data-rest-resource="profiles" data-rest-method="DELETE">DELETE</button>
+              <span>orders</span>
+              <button data-rest-resource="orders" data-rest-method="GET">GET</button>
+              <button data-rest-resource="orders" data-rest-method="POST">POST</button>
+              <button data-rest-resource="orders" data-rest-method="PUT">PUT</button>
+              <button data-rest-resource="orders" data-rest-method="PATCH">PATCH</button>
+              <button data-rest-resource="orders" data-rest-method="DELETE">DELETE</button>
+              <span>transactions</span>
+              <button data-rest-resource="transactions" data-rest-method="GET">GET</button>
+              <button data-rest-resource="transactions" data-rest-method="POST">POST</button>
+              <button data-rest-resource="transactions" data-rest-method="PUT">PUT</button>
+              <button data-rest-resource="transactions" data-rest-method="PATCH">PATCH</button>
+              <button data-rest-resource="transactions" data-rest-method="DELETE">DELETE</button>
+            </div>
+          </section>
+          <section class="panel">
+            <h3>Evidence Output</h3>
+            <pre id="utsOutput">Gunakan endpoint ini untuk UTS mini case.</pre>
+          </section>
+        </div>
+      </article>
+
+      <article class="page" id="page-websocket">
+        <h2>Pertemuan 3: WebSocket Real-Time Communication</h2>
+        <p class="note">Session WebSocket dipertahankan dengan client heartbeat 15 detik dan server ping keepalive. Koneksi tidak diputus otomatis saat idle; tutup dengan tombol Close.</p>
+        <div class="split">
+          <section class="panel">
+            <h3>WebSocket Echo</h3>
+            <p>Endpoint: <code>ws://localhost:8088/ws/echo?channel={channel}</code></p>
+            <label>Channel</label>
+            <select id="wsChannel">
+              <option value="dashboard">dashboard</option>
+              <option value="orders">orders</option>
+              <option value="telemetry">telemetry</option>
+              <option value="alerts">alerts</option>
+            </select>
+            <label>Event Template</label>
+            <select id="wsTemplate">
+              <option value="dashboard_refresh">dashboard_refresh</option>
+              <option value="order_created">order_created</option>
+              <option value="sensor_alert">sensor_alert</option>
+              <option value="chat_message">chat_message</option>
+            </select>
+            <label>Message JSON</label>
+            <textarea id="wsMessage">{
+  "event": "dashboard_refresh",
+  "value": 1
+}</textarea>
+            <div class="actions">
+              <button id="connectWs">Connect</button>
+              <button id="sendWs">Send Message</button>
+              <button id="sendWsCapture">Send Real WebSocket Capture</button>
+              <button id="postRealtimeEvent">POST Event</button>
+              <button id="loadRealtimeEvents">GET Events</button>
+              <button class="secondary methodCard" data-fetch="/api/websocket/real-status">WebSocket Capture Guide</button>
+              <button class="secondary" id="closeWs">Close</button>
+            </div>
+          </section>
+          <section class="panel">
+            <h3>WebSocket Log</h3>
+            <pre id="wsLog">Not connected.</pre>
+          </section>
+        </div>
+      </article>
+
+      <article class="page" id="page-mqtt">
+        <h2>Pertemuan 4: MQTT & IoT Telemetry Simulator</h2>
+        <p class="note">Satu script `server.py` menjalankan HTTP simulator di port `8088` dan embedded MQTT broker asli di port `1883`. Untuk session yang tidak disconnect, klik `Start Persistent MQTT Session`; Wireshark akan menangkap CONNECT, PUBLISH, lalu PINGREQ/PINGRESP.</p>
+        <div class="split">
+          <section class="panel">
+            <h3>Publish Telemetry</h3>
+            <label>Client ID</label>
+            <input id="mqttClientId" value="student-client-01">
+            <label>Topic</label>
+            <input id="mqttTopic" value="class/commproto/sensor-01/temperature">
+            <label>QoS</label>
+            <select id="mqttQos">
+              <option value="0">QoS 0 - at most once</option>
+              <option value="1">QoS 1 - at least once</option>
+              <option value="2">QoS 2 - exactly once concept</option>
+            </select>
+            <label><input id="mqttRetained" type="checkbox"> Retained message</label>
+            <label>Payload JSON</label>
+            <textarea id="mqttPayload">{
+  "deviceId": "sensor-01",
+  "temperature": 27.5,
+  "humidity": 61
+}</textarea>
+            <label>Subscribe Filter</label>
+            <input id="mqttFilter" value="class/commproto/+/temperature">
+            <div class="actions">
+              <button id="publishMqtt">Publish</button>
+              <button id="publishRealMqtt">Publish Real MQTT Packet</button>
+              <button id="startMqttSession">Start Persistent MQTT Session</button>
+              <button class="secondary" id="stopMqttSession">Stop MQTT Session</button>
+              <button class="secondary" id="loadMqtt">Load Messages</button>
+              <button class="secondary" id="loadMqttByFilter">Load by Filter</button>
+              <button class="secondary methodCard" data-fetch="/api/mqtt/real-status">MQTT Broker Status</button>
+              <button class="secondary methodCard" data-fetch="/api/mqtt/session/status">MQTT Session Status</button>
+              <button class="secondary" id="loadMqttTopics">Load Topics</button>
+              <button class="secondary" id="clearMqtt">Clear</button>
+            </div>
+          </section>
+          <section class="panel">
+            <h3>Topic Messages</h3>
+            <pre id="mqttOutput">Belum ada message.</pre>
+          </section>
+        </div>
+      </article>
+
+      <article class="page" id="page-cases">
+        <h2>Pertemuan 11: Microservices Communication Patterns</h2>
+        <div class="grid three">
+          <button class="methodCard" data-fetch="/api/cases/protocol-decision">Protocol Decision Case</button>
+          <button class="methodCard" data-fetch="/api/microservices/order-flow">GET Order Flow</button>
+          <button id="runMicroserviceOrder">POST Simulate Order Flow</button>
+        </div>
+        <label>Fail at service</label>
+        <select id="microFailAt">
+          <option value="">No failure</option>
+          <option value="inventory-service">inventory-service</option>
+          <option value="payment-service">payment-service</option>
+          <option value="notification-service">notification-service</option>
+        </select>
+        <pre id="casesOutput">Load microservices case untuk diskusi orchestration, chaining, latency, dan failure point.</pre>
+      </article>
+
+      <article class="page" id="page-api-docs">
+        <h2>Pertemuan 9: API Design & Documentation using Postman/Newman</h2>
+        <div class="split">
+          <section class="panel">
+            <h3>API Documentation & Test Runner</h3>
+            <button class="methodCard" data-fetch="/api/openapi">GET OpenAPI-style Spec</button>
+            <button class="methodCard" data-fetch="/api/postman-run-summary">GET Newman Runner Guide</button>
+            <label>Runner Folder</label>
+            <input id="postmanFolder" value="P9 API Documentation and Newman">
+            <label>Iterations</label>
+            <input id="postmanIterations" value="2">
+            <button id="simulatePostmanRun">POST Simulate Runner</button>
+            <p class="note">REST CRUD tetap prasyarat P2. Pertemuan 9 fokus pada API documentation, collection quality, environment, tests, dan runner evidence.</p>
+          </section>
+          <section class="panel">
+            <h3>Output</h3>
+            <pre id="api-docsOutput">Gunakan endpoint ini untuk dokumentasi API dan test evidence.</pre>
+          </section>
+        </div>
+      </article>
+
+      <article class="page" id="page-reliability">
+        <h2>Pertemuan 10: Rate Limiting & Load Balancing</h2>
+        <div class="grid three">
+          <button class="methodCard" data-fetch="/api/reliability/rate-limited">Hit Rate-Limited API</button>
+          <button class="methodCard" data-fetch="/api/reliability/load-balanced">Hit Load-Balanced API</button>
+          <button id="resetReliability">Reset Reliability State</button>
+          <button id="simulateLoad">POST Simulate Load</button>
+        </div>
+        <pre id="reliabilityOutput">Klik rate-limited API beberapa kali untuk melihat 429. Klik load-balanced API untuk melihat backend berganti.</pre>
+      </article>
+
+      <article class="page" id="page-observability">
+        <h2>Pertemuan 12: Monitoring, Logging, Telemetry & Observability</h2>
+        <div class="grid three">
+          <button class="methodCard" data-fetch="/api/observability/metrics">GET Metrics</button>
+          <button class="methodCard" data-fetch="/api/observability/logs">GET Logs</button>
+          <button class="methodCard" data-fetch="/api/observability/trace/demo-trace-001">GET Trace</button>
+          <button id="runCustomLog">POST Custom Log</button>
+          <button id="runObservabilityCapture">POST Capture Scenario</button>
+        </div>
+        <pre id="observabilityOutput">Gunakan output ini untuk menjelaskan logs, metrics, traces, latency, status code, dan request count.</pre>
+      </article>
+
+      <article class="page" id="page-automation">
+        <h2>Pertemuan 13-15: n8n Automation, Project Phase & Peer Review</h2>
+        <div class="split">
+          <section class="panel">
+            <h3>n8n Workflow Support</h3>
+            <button class="methodCard" data-fetch="/api/automation/n8n-workflow-spec">GET n8n Workflow Spec</button>
+            <button class="methodCard" data-fetch="/api/automation/inbox">GET Automation Inbox</button>
+            <button id="sendAutomationEvent">POST Automation Event</button>
+            <button id="simulateWorkflowRun">POST Simulate Workflow Run</button>
+            <p class="note">Workflow n8n yang direkomendasikan: Webhook Trigger -> HTTP Request ke demo app -> Respond to Webhook. Jika n8n berjalan di Docker, gunakan `host.docker.internal:8088`.</p>
+          </section>
+          <section class="panel">
+            <h3>Automation Output</h3>
+            <pre id="automationOutput">Endpoint ini mendukung praktikum automation dengan n8n dan project phase.</pre>
+          </section>
+        </div>
+      </article>
+
+      <article class="page" id="page-grpc">
+        <h2>Pertemuan 5: gRPC & Protocol Buffers Concept</h2>
+        <p class="note">Satu script `server.py` menjalankan UI HTTP di port `8088` dan real gRPC HTTP/2 di port `50051` jika dependency `grpcio` tersedia. Capture Wireshark pada `tcp.port == 50051`, lalu Decode As HTTP2 jika perlu.</p>
+        <p class="note">Untuk demo standar tidak perlu edit `.proto`. Pilih method: `Predict` untuk satu customer, `BatchPredict` untuk banyak customer via `items[]`, dan `HealthCheck` untuk cek service readiness.</p>
+        <div class="split">
+          <section class="panel">
+            <h3>Proto Contract</h3>
+            <button class="methodCard" data-fetch="/api/grpc/proto">GET .proto</button>
+            <button class="methodCard" data-fetch="/api/grpc/services">GET Services</button>
+            <h3>RPC Method Lab</h3>
+            <label>RPC Method</label>
+            <select id="grpcMethod">
+              <option>Predict</option>
+              <option>BatchPredict</option>
+              <option>HealthCheck</option>
+            </select>
+            <textarea id="grpcBody">{
+  "customerId": "C-1024",
+  "features": {
+    "avgOrderValue": 250000,
+    "monthlyOrders": 7
+  }
+}</textarea>
+            <button id="runGrpcMock">POST Concept Mock</button>
+            <button id="runGrpcCall">POST Dynamic RPC Call</button>
+            <button id="runGrpcHttp2">POST Real gRPC HTTP/2 Call</button>
+            <h3>Quick Invoke</h3>
+            <div class="grpcQuickGrid">
+              <button data-grpc-method="Predict" data-grpc-mode="concept">Predict Concept</button>
+              <button data-grpc-method="Predict" data-grpc-mode="http2">Predict HTTP/2</button>
+              <button data-grpc-method="BatchPredict" data-grpc-mode="concept">BatchPredict Concept</button>
+              <button data-grpc-method="BatchPredict" data-grpc-mode="http2">BatchPredict HTTP/2</button>
+              <button data-grpc-method="HealthCheck" data-grpc-mode="concept">HealthCheck Concept</button>
+              <button data-grpc-method="HealthCheck" data-grpc-mode="http2">HealthCheck HTTP/2</button>
+            </div>
+            <p class="note">Jika HTTP/2 tidak aktif karena port `50051` bentrok, output tetap menampilkan `fallbackConceptResponse` agar demo web tidak menggantung.</p>
+          </section>
+          <section class="panel">
+            <h3>Output</h3>
+            <pre id="grpcOutput">Load proto atau run mock inference.</pre>
+          </section>
+        </div>
+      </article>
+
+      <article class="page" id="page-project">
+        <h2>Pertemuan 16: UAS Final Project Presentation</h2>
+        <div class="grid three">
+          <button class="methodCard" data-fetch="/api/project/events">GET Project Events</button>
+          <button class="methodCard" data-fetch="/api/project/summary">GET Project Summary</button>
+          <button id="createProjectEvent">POST Project Event</button>
+          <button id="runProjectCapture">POST Multi-Protocol Capture</button>
+        </div>
+        <pre id="projectOutput">Endpoint ini bisa dipakai untuk demo integrated evidence.</pre>
+      </article>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

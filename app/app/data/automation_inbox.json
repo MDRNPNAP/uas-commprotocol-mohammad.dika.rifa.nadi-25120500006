@@ -1,0 +1,259 @@
+[
+  {
+    "id": 1780818075071,
+    "receivedAt": "2026-06-07T14:41:15+0700",
+    "source": "n8n-or-postman",
+    "payload": {
+      "protocol": "MQTT+REST+n8n",
+      "event": "telemetry.workflow.completed",
+      "deviceId": "sensor-01",
+      "evidence": "n8n-workflow-run"
+    }
+  },
+  {
+    "id": 1780818076123,
+    "receivedAt": "2026-06-07T14:41:16+0700",
+    "source": "workflow-run-simulator",
+    "payload": {
+      "workflow": "telemetry-to-inbox",
+      "runId": "run-1780818076115",
+      "status": "success",
+      "steps": [
+        {
+          "node": "Webhook Trigger",
+          "status": "success",
+          "output": {
+            "event": "telemetry.workflow.completed"
+          }
+        },
+        {
+          "node": "Set/Edit Fields",
+          "status": "success",
+          "output": {
+            "normalized": true
+          }
+        },
+        {
+          "node": "HTTP Request",
+          "status": "success",
+          "output": {
+            "target": "/api/automation/inbox"
+          }
+        },
+        {
+          "node": "Respond to Webhook",
+          "status": "success",
+          "output": {
+            "status": "accepted"
+          }
+        }
+      ],
+      "protocolEvidence": {
+        "mqttTelemetry": {
+          "ok": true,
+          "realMqtt": true,
+          "protocol": "MQTT 3.1.1 over TCP",
+          "broker": "127.0.0.1:1883",
+          "clientId": "n8n-automation-simulator",
+          "topic": "class/commproto/automation/telemetry",
+          "topicFilter": "class/commproto/+/telemetry",
+          "requestedQos": 1,
+          "effectiveQos": 1,
+          "retained": false,
+          "packets": [
+            "CONNECT",
+            "CONNACK",
+            "SUBSCRIBE",
+            "SUBACK",
+            "PUBLISH",
+            "PUBACK",
+            "DISCONNECT"
+          ],
+          "payload": {
+            "deviceId": "sensor-01",
+            "temperature": 31.2,
+            "source": "mqtt-simulator"
+          },
+          "wireshark": {
+            "captureFilter": "tcp port 1883",
+            "displayFilter": "mqtt",
+            "packetTypesToFind": [
+              "CONNECT",
+              "CONNACK",
+              "SUBSCRIBE",
+              "SUBACK",
+              "PUBLISH",
+              "DISCONNECT"
+            ]
+          },
+          "note": "Request ke 8088 hanya trigger. Untuk bukti protocol MQTT, capture packet pada TCP port 1883."
+        },
+        "httpEndpoint": "/api/automation/workflow-run"
+      },
+      "teachingPoint": "Automation evidence should show trigger input, transformation, HTTP call, and final response."
+    }
+  },
+  {
+    "id": 1781806916891,
+    "receivedAt": "2026-06-18T18:21:56+0000",
+    "source": "workflow-run-simulator",
+    "payload": {
+      "workflow": "telemetry-to-inbox",
+      "runId": "run-1781806916891",
+      "status": "success",
+      "steps": [
+        {
+          "node": "Webhook Trigger",
+          "status": "success",
+          "output": {
+            "event": "telemetry.workflow.completed"
+          }
+        },
+        {
+          "node": "Set/Edit Fields",
+          "status": "success",
+          "output": {
+            "normalized": true
+          }
+        },
+        {
+          "node": "HTTP Request",
+          "status": "success",
+          "output": {
+            "target": "/api/automation/inbox"
+          }
+        },
+        {
+          "node": "Respond to Webhook",
+          "status": "success",
+          "output": {
+            "status": "accepted"
+          }
+        }
+      ],
+      "protocolEvidence": {
+        "mqttTelemetry": {
+          "ok": true,
+          "realMqtt": true,
+          "protocol": "MQTT 3.1.1 over TCP",
+          "broker": "127.0.0.1:1883",
+          "clientId": "n8n-automation-simulator",
+          "topic": "class/commproto/automation/telemetry",
+          "topicFilter": "class/commproto/+/telemetry",
+          "requestedQos": 1,
+          "effectiveQos": 1,
+          "retained": false,
+          "packets": [
+            "CONNECT",
+            "CONNACK",
+            "SUBSCRIBE",
+            "SUBACK",
+            "PUBLISH",
+            "PUBACK",
+            "DISCONNECT"
+          ],
+          "payload": {
+            "deviceId": "sensor-01",
+            "temperature": 31.2
+          },
+          "wireshark": {
+            "captureFilter": "tcp port 1883",
+            "displayFilter": "mqtt",
+            "packetTypesToFind": [
+              "CONNECT",
+              "CONNACK",
+              "SUBSCRIBE",
+              "SUBACK",
+              "PUBLISH",
+              "DISCONNECT"
+            ]
+          },
+          "note": "Request ke 8088 hanya trigger. Untuk bukti protocol MQTT, capture packet pada TCP port 1883."
+        },
+        "httpEndpoint": "/api/automation/workflow-run"
+      },
+      "teachingPoint": "Automation evidence should show trigger input, transformation, HTTP call, and final response."
+    }
+  },
+  {
+    "id": 1781807086558,
+    "receivedAt": "2026-06-18T18:24:46+0000",
+    "source": "workflow-run-simulator",
+    "payload": {
+      "workflow": "telemetry-to-inbox",
+      "runId": "run-1781807086558",
+      "status": "success",
+      "steps": [
+        {
+          "node": "Webhook Trigger",
+          "status": "success",
+          "output": {
+            "event": "telemetry.workflow.completed"
+          }
+        },
+        {
+          "node": "Set/Edit Fields",
+          "status": "success",
+          "output": {
+            "normalized": true
+          }
+        },
+        {
+          "node": "HTTP Request",
+          "status": "success",
+          "output": {
+            "target": "/api/automation/inbox"
+          }
+        },
+        {
+          "node": "Respond to Webhook",
+          "status": "success",
+          "output": {
+            "status": "accepted"
+          }
+        }
+      ],
+      "protocolEvidence": {
+        "mqttTelemetry": {
+          "ok": true,
+          "realMqtt": true,
+          "protocol": "MQTT 3.1.1 over TCP",
+          "broker": "127.0.0.1:1883",
+          "clientId": "n8n-automation-simulator",
+          "topic": "class/commproto/automation/telemetry",
+          "topicFilter": "class/commproto/+/telemetry",
+          "requestedQos": 1,
+          "effectiveQos": 1,
+          "retained": false,
+          "packets": [
+            "CONNECT",
+            "CONNACK",
+            "SUBSCRIBE",
+            "SUBACK",
+            "PUBLISH",
+            "PUBACK",
+            "DISCONNECT"
+          ],
+          "payload": {
+            "deviceId": "sensor-01"
+          },
+          "wireshark": {
+            "captureFilter": "tcp port 1883",
+            "displayFilter": "mqtt",
+            "packetTypesToFind": [
+              "CONNECT",
+              "CONNACK",
+              "SUBSCRIBE",
+              "SUBACK",
+              "PUBLISH",
+              "DISCONNECT"
+            ]
+          },
+          "note": "Request ke 8088 hanya trigger. Untuk bukti protocol MQTT, capture packet pada TCP port 1883."
+        },
+        "httpEndpoint": "/api/automation/workflow-run"
+      },
+      "teachingPoint": "Automation evidence should show trigger input, transformation, HTTP call, and final response."
+    }
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "transactionId": "TRX-2026-001",
+    "orderId": "ORD-2026-001",
+    "method": "bank_transfer",
+    "amount": 450000,
+    "status": "settled",
+    "paidAt": "2026-06-01T09:00:00+0700",
+    "channel": "payment-gateway"
+  },
+  {
+    "id": 2,
+    "transactionId": "TRX-2026-002",
+    "orderId": "ORD-2026-002",
+    "method": "virtual_account",
+    "amount": 875000,
+    "status": "pending",
+    "paidAt": null,
+    "channel": "payment-gateway"
+  }
+]

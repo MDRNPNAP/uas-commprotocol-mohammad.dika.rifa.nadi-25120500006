@@ -1,0 +1,6 @@
+[
+  {"id": 1, "name": "Laptop Pro 14", "category": "computer", "price": 14500000, "stock": 5},
+  {"id": 2, "name": "Temperature Sensor DHT22", "category": "iot", "price": 85000, "stock": 30},
+  {"id": 3, "name": "Wireless Router AC1200", "category": "networking", "price": 475000, "stock": 10}
+]
+

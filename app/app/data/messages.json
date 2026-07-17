@@ -1,0 +1,294 @@
+[
+  {
+    "id": 1780818065522,
+    "clientId": "uas-project-device",
+    "topic": "class/commproto/uas/project",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "event": "uas.demo.executed",
+      "source": "project-capture-demo"
+    },
+    "publishedAt": "2026-06-07T14:41:05+0700",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "topic": "project/events",
+    "payload": {
+      "id": 1780818065520,
+      "publishedAt": "2026-06-07T14:41:05+0700",
+      "protocol": "MQTT+WebSocket+n8n",
+      "event": "uas.demo.executed",
+      "evidence": "screenshot+postman+automation-log",
+      "wireCapture": true,
+      "protocolEvidence": {
+        "ok": true,
+        "scenario": "UAS integrated multi-protocol capture demo",
+        "httpEvidence": {
+          "endpoint": "POST /api/project/capture-demo",
+          "port": 8088
+        },
+        "mqttEvidence": {
+          "ok": true,
+          "realMqtt": true,
+          "protocol": "MQTT 3.1.1 over TCP",
+          "broker": "127.0.0.1:1883",
+          "clientId": "uas-project-device",
+          "topic": "class/commproto/uas/project",
+          "topicFilter": "class/commproto/+/project",
+          "requestedQos": 1,
+          "effectiveQos": 1,
+          "retained": false,
+          "packets": [
+            "CONNECT",
+            "CONNACK",
+            "SUBSCRIBE",
+            "SUBACK",
+            "PUBLISH",
+            "PUBACK",
+            "DISCONNECT"
+          ],
+          "payload": {
+            "event": "uas.demo.executed",
+            "source": "project-capture-demo"
+          },
+          "wireshark": {
+            "captureFilter": "tcp port 1883",
+            "displayFilter": "mqtt",
+            "packetTypesToFind": [
+              "CONNECT",
+              "CONNACK",
+              "SUBSCRIBE",
+              "SUBACK",
+              "PUBLISH",
+              "DISCONNECT"
+            ]
+          },
+          "note": "Request ke 8088 hanya trigger. Untuk bukti protocol MQTT, capture packet pada TCP port 1883."
+        },
+        "webSocketEvidence": {
+          "ok": true,
+          "realWebSocket": true,
+          "protocol": "WebSocket over HTTP/1.1 Upgrade",
+          "endpoint": "ws://127.0.0.1:8088/ws/echo?channel=dashboard",
+          "packets": [
+            "HTTP GET Upgrade",
+            "101 Switching Protocols",
+            "WebSocket Text Frame",
+            "WebSocket Close Frame"
+          ],
+          "sent": "{\"event\":\"uas.dashboard.update\",\"project\":\"multi-protocol-pipeline\"}",
+          "receivedOpcode": 1,
+          "received": {
+            "type": "echo",
+            "receivedAt": "2026-06-07T14:41:05+0700",
+            "channel": "dashboard",
+            "message": "{\"event\":\"uas.dashboard.update\",\"project\":\"multi-protocol-pipeline\"}"
+          },
+          "wireshark": {
+            "displayFilters": [
+              "tcp.port == 8088",
+              "http.request.uri contains \"/ws/echo\"",
+              "http.header contains \"Upgrade\"",
+              "websocket"
+            ],
+            "decodeAs": "TCP port 8088 -> HTTP, then inspect WebSocket frames after 101 Switching Protocols"
+          },
+          "note": "Gunakan filter `tcp.port == 8088` untuk handshake, lalu `websocket` setelah Wireshark decode HTTP Upgrade."
+        },
+        "grpcEvidence": {
+          "ok": true,
+          "realGrpc": true,
+          "triggerEndpoint": "POST /api/grpc/http2-call",
+          "method": "Predict",
+          "target": "127.0.0.1:50051",
+          "transport": "gRPC over HTTP/2",
+          "request": {
+            "customer_id": "UAS-001",
+            "features": {
+              "avg_order_value": 450000.0,
+              "monthly_orders": 9
+            }
+          },
+          "response": {
+            "customer_id": "UAS-001",
+            "score": 0.9,
+            "label": "high_value",
+            "model_version": "integrated-http2-v1"
+          },
+          "wireshark": {
+            "captureFilter": "tcp port 50051",
+            "displayFilter": "http2",
+            "decodeAs": "TCP port 50051 -> HTTP2"
+          },
+          "note": "HTTP endpoint ini hanya trigger. Traffic yang perlu di-capture adalah gRPC HTTP/2 pada port 50051."
+        },
+        "wireshark": {
+          "http": "tcp.port == 8088",
+          "mqtt": "tcp.port == 1883 or mqtt",
+          "websocket": "websocket or http.request.uri contains \"/ws/echo\"",
+          "grpc": "tcp.port == 50051 or http2"
+        }
+      }
+    },
+    "publishedAt": "2026-06-07T14:41:05+0700"
+  },
+  {
+    "id": 1780818066409,
+    "clientId": "uas-project-device",
+    "topic": "class/commproto/uas/project",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "event": "uas.demo.executed",
+      "source": "project-capture-demo"
+    },
+    "publishedAt": "2026-06-07T14:41:06+0700",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1780818076094,
+    "clientId": "n8n-automation-simulator",
+    "topic": "class/commproto/automation/telemetry",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "deviceId": "sensor-01",
+      "temperature": 31.2,
+      "source": "mqtt-simulator"
+    },
+    "publishedAt": "2026-06-07T14:41:16+0700",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1780818099088,
+    "clientId": "order-service",
+    "topic": "class/commproto/orders/status",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "orderId": "ORD-DEMO-001",
+      "status": "created",
+      "amount": 450000
+    },
+    "publishedAt": "2026-06-07T14:41:39+0700",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1780818101627,
+    "clientId": "order-service",
+    "topic": "class/commproto/orders/status",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "orderId": "ORD-DEMO-001",
+      "status": "created",
+      "amount": 450000
+    },
+    "publishedAt": "2026-06-07T14:41:41+0700",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1781806916886,
+    "clientId": "student-client-01",
+    "topic": "campus/sensor/temp",
+    "qos": 0,
+    "retained": false,
+    "payload": {
+      "deviceId": "sensor-01",
+      "temperature": 31.2
+    },
+    "publishedAt": "2026-06-18T18:21:56+0000",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1781806916890,
+    "clientId": "n8n-automation-simulator",
+    "topic": "class/commproto/automation/telemetry",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "deviceId": "sensor-01",
+      "temperature": 31.2
+    },
+    "publishedAt": "2026-06-18T18:21:56+0000",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1781806916894,
+    "clientId": "uas-project-device",
+    "topic": "class/commproto/uas/project",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "event": "uas.demo.executed",
+      "source": "project-capture-demo"
+    },
+    "publishedAt": "2026-06-18T18:21:56+0000",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1781807086545,
+    "clientId": "order-service",
+    "topic": "class/commproto/orders/status",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "orderId": "O-1",
+      "status": "created",
+      "amount": 100000
+    },
+    "publishedAt": "2026-06-18T18:24:46+0000",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1781807086552,
+    "clientId": "observability-agent",
+    "topic": "class/commproto/observability/metrics",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "requestCount": 13,
+      "timestamp": "2026-06-18T18:24:46+0000"
+    },
+    "publishedAt": "2026-06-18T18:24:46+0000",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1781807086557,
+    "clientId": "n8n-automation-simulator",
+    "topic": "class/commproto/automation/telemetry",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "deviceId": "sensor-01"
+    },
+    "publishedAt": "2026-06-18T18:24:46+0000",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1781807086563,
+    "clientId": "uas-project-device",
+    "topic": "class/commproto/uas/project",
+    "qos": 1,
+    "retained": false,
+    "payload": {
+      "event": "uas.demo.executed",
+      "source": "project-capture-demo"
+    },
+    "publishedAt": "2026-06-18T18:24:46+0000",
+    "transport": "mqtt-tcp-real"
+  },
+  {
+    "id": 1781807086577,
+    "clientId": "student-client-01",
+    "topic": "class/demo",
+    "qos": 0,
+    "retained": false,
+    "payload": {
+      "temperature": 31.2
+    },
+    "publishedAt": "2026-06-18T18:24:46+0000",
+    "transport": "mqtt-tcp-real"
+  }
+]

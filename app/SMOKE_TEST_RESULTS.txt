@@ -1,0 +1,26 @@
+Smoke Test Summary - Communication Protocols Demo App Refactored
+
+Environment used in sandbox: Python 3.13.5, grpcio/protobuf installed.
+Docker daemon/n8n container was not run in sandbox; Docker commands are documented for Windows Docker Desktop and Debian-family Linux.
+
+Endpoint results from local smoke test:
+GET /api/health -> 200 PASS
+GET /api/openapi -> 200 PASS
+POST /api/reliability/reset -> 200 PASS
+GET /api/reliability/rate-limited -> 200, then 429 after limit PASS
+GET /api/reliability/load-balanced -> 200 PASS
+POST /api/reliability/simulate-load -> 200 PASS
+GET /api/microservices/order-flow -> 200 PASS
+POST /api/microservices/orders -> 201 PASS
+GET /api/observability/metrics -> 200 PASS
+GET /api/observability/logs -> 200 PASS
+POST /api/observability/capture-scenario -> 200 PASS
+GET /api/automation/n8n-workflow-spec -> 200 PASS
+POST /api/automation/workflow-run -> 201 PASS
+GET /api/automation/inbox -> 200 PASS
+POST /api/project/capture-demo -> 200 PASS
+GET /api/project/summary -> 200 PASS
+POST /api/encoding/convert {to: xml} -> 200 PASS
+POST /api/encoding/convert {to: protobuf} -> 200 PASS, actual protobuf binary returned as base64 using protobuf library
+GET /api/mqtt/real-status -> 200 PASS
+POST /api/mqtt/real-publish -> 200 PASS
